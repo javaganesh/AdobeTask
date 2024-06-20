@@ -27,24 +27,21 @@ public class NewsArticleController {
         this.newsService = newsService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<NewsArticle>> getNewsArticles() {
-        try {
-            List<NewsArticle> articles = newsService.fetchNewsArticles();
-            return ResponseEntity.ok(articles);
-        } catch (NewsDataNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (ApiNotAvailableException ex) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+	/*
+	 * @GetMapping public ResponseEntity<List<NewsArticle>> getNewsArticles() { try
+	 * { List<NewsArticle> articles = newsService.fetchNewsArticles(); return
+	 * ResponseEntity.ok(articles); } catch (NewsDataNotFoundException ex) { return
+	 * ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); } catch
+	 * (ApiNotAvailableException ex) { return
+	 * ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null); } catch
+	 * (Exception ex) { return
+	 * ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); } }
+	 */
 
     @GetMapping("/between")
     public ResponseEntity<List<NewsArticle>> getNewsArticlesBetweenDates(@RequestParam String from, @RequestParam String to) {
-        try {
-            List<NewsArticle> articles = newsService.fetchNewsArticlesBetweenDates(from, to);
+    	try {
+        	  List<NewsArticle> articles = newsService.fetchNewsArticlesBetweenDates(from, to);
             return ResponseEntity.ok(articles);
         } catch (NewsDataNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

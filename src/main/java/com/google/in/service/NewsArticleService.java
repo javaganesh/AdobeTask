@@ -62,20 +62,38 @@ public class NewsArticleService {
 	        }
 	    }
 
-	    public List<NewsArticle> fetchNewsArticlesBetweenDates(String from, String to) {
+	  public List<NewsArticle> fetchNewsArticlesBetweenDates(String from, String to) {
+	        // Validate input parameters
+	        if (from == null || to == null) {
+	            throw new IllegalArgumentException("From and To dates must not be null");
+	        }
+
 	        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-	        LocalDateTime fromDate = LocalDateTime.parse(from, formatter);
-	        LocalDateTime toDate = LocalDateTime.parse(to, formatter);
+	        LocalDateTime fromDate;
+	        LocalDateTime toDate;
+
+	        try {
+	            fromDate = LocalDateTime.parse(from, formatter);
+	            toDate = LocalDateTime.parse(to, formatter);
+	        } catch (Exception e) {
+	            throw new IllegalArgumentException("Invalid date format. Please use ISO date-time format (yyyy-MM-dd'T'HH:mm:ss)", e);
+	        }
 
 	        List<NewsArticle> articles = fetchNewsArticles();
 
 	        return articles.stream()
 	                .filter(article -> {
-	                    LocalDateTime publishedDate = LocalDateTime.parse(article.getPublishedAt(), formatter);
+	                    LocalDateTime publishedDate;
+	                    try {
+	                        publishedDate = LocalDateTime.parse(article.getPublishedAt(), formatter);
+	                    } catch (Exception e) {
+	                        throw new IllegalArgumentException("Invalid published date format in news article: " + article.getPublishedAt(), e);
+	                    }
 	                    return (publishedDate.isEqual(fromDate) || publishedDate.isAfter(fromDate)) &&
 	                            (publishedDate.isEqual(toDate) || publishedDate.isBefore(toDate));
 	                })
 	                .collect(Collectors.toList());
-	    }	  
+	    }
+ 
 	  
 }
