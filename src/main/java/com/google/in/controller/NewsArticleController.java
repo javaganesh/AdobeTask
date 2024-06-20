@@ -39,9 +39,15 @@ public class NewsArticleController {
 	 */
 
     @GetMapping("/between")
-    public ResponseEntity<List<NewsArticle>> getNewsArticlesBetweenDates(@RequestParam String from, @RequestParam String to) {
-    	try {
-        	  List<NewsArticle> articles = newsService.fetchNewsArticlesBetweenDates(from, to);
+    public ResponseEntity<List<NewsArticle>> getNewsArticlesBetweenDates(@RequestParam(required = false) String from,
+                                                                         @RequestParam(required = false) String to) {
+        if (from == null || to == null) {
+            // Handle case where either from or to date is missing
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        try {
+            List<NewsArticle> articles = newsService.fetchNewsArticlesBetweenDates(from, to);
             return ResponseEntity.ok(articles);
         } catch (NewsDataNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
